@@ -33,6 +33,13 @@ const game = {
             //if the attacked ships' hull reached 0 and is destroyed
             if (attacked.hull === 0) 
                 {console.log(`${attacked.name} has been DESTROYED!`);
+                //if you are destroyed
+                if (attacked.name === 'USS Assembly') {
+                    console.log('You LOSE!');
+                    //exit out of game
+                    this.playing = false;
+                }
+                else {
                 //remove first alien ship out of array
                 this.alienShips.shift();
                 //check if there are any remaining enemy ships
@@ -54,13 +61,8 @@ const game = {
                         console.log('You saved Earth!');
                         this.playing = false;
                     }
-                //if you are destroyed
-                if (attacked.name === 'USS Assembly') {
-                    console.log('You LOSE!');
-                    //exit out of game
-                    this.playing = false;
                 }
-                }
+            }
             //else, attacked becomes the attacker
             else {
                 this.attack(attacked, attacker);

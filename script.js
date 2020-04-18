@@ -11,6 +11,7 @@ class Ship {
 // game object
 const game = {
     title: "Space Battle",
+    playing: true,
     ussAssembly: new Ship('USS Assembly', 20, 5, 0.7),
     alienShip: new Ship('Enemy Ship', 4, 3, 0.7),
     
@@ -27,10 +28,29 @@ const game = {
             if (attacked.hull < 0) {attacked.hull = 0};
             //tell us remaining hull score of attacked ship
             console.log(`${attacked.name}'s hull is now ${attacked.hull}.`);
-            //if the attacked ships' hull reached 0
+            //if the attacked ships' hull reached 0 and is destroyed
             if (attacked.hull === 0) 
-                {console.log(`${attacked.name} has been DESTROYED!`);}
+                {console.log(`${attacked.name} has been DESTROYED!`);
+                //if you are destroyed
+                if (attacked.name === 'USS Assembly') {
+                    console.log('You LOSE!');
+                    //exit out of game
+                    this.playing = false;
+                }
+                else //if you destroy the ship, you have the option to attack next ship or retreat
+                    {
+                        let answer = prompt('Would you like to attack the next ship or retreat?');
+                        //if answer is retreat, game is over
+                        if (answer.toLowerCase() === 'retreat')
+                            {console.log('Game Over.')};
+                            //exit out of game
+                            this.playing = false;      
+                    }
+                }
             //else, attacked becomes the attacker
+            else {
+                this.attack(attacked, attacker);
+            }
         }
         else {
             //tell us the attacking ship missed
@@ -40,18 +60,17 @@ const game = {
     
     //play function
     play: function() {
-        this.attack(this.ussAssembly, this.alienShip);
-        //if alien ship survives
-        //if (this.alienShip.hull > 0) {
-            //this.attack(this.alienShip, this.ussAssembly);
+        while (this.playing === true) {
+            this.attack(this.ussAssembly, this.alienShip);
         }
-    };
+    }
+}
 
 
 console.log(game.play());
 
 
-//console.log(game.attack(game.ussAssembly, game.alienShip));
+//console.log(game.attack(game.alienShip, game.ussAssembly));
 
 
 

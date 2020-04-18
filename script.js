@@ -14,7 +14,8 @@ const game = {
     playing: true,
     ussAssembly: new Ship('USS Assembly', 20, 5, 0.7),
     //alienShip: new Ship('Enemy Ship', 4, 3, 0.7),
-    alienShips: ['Enemy', 'Mean'],
+    alienShipNames: ['Enemy', 'Mean'],
+    alienShips: [],
     
     //attack method
     attack: function(attacker, attacked) {
@@ -32,6 +33,9 @@ const game = {
             //if the attacked ships' hull reached 0 and is destroyed
             if (attacked.hull === 0) 
                 {console.log(`${attacked.name} has been DESTROYED!`);
+                //remove first alien ship out of array
+                this.alienShips.shift();
+                console.log(this.alienShips[0]);
                 //if you are destroyed
                 if (attacked.name === 'USS Assembly') {
                     console.log('You LOSE!');
@@ -43,9 +47,13 @@ const game = {
                         let answer = prompt('Would you like to attack the next ship or retreat?');
                         //if answer is retreat, game is over
                         if (answer.toLowerCase() === 'retreat')
-                            {console.log('Game Over.')};
+                            {console.log('Game Over.');
                             //exit out of game
-                            this.playing = false;      
+                            this.playing = false;}
+                        else if (answer.toLowerCase() === 'attack') {
+                            console.log('attacked is now '+this.alienShips[0]);
+                            this.attack(attacker, this.alienShips[0]);
+                        }    
                     }
                 }
             //else, attacked becomes the attacker
@@ -62,11 +70,14 @@ const game = {
 
     //generate enemy ships function
     generateEnemies() {
-        for(ship of this.alienShips) {
+        for(ship of this.alienShipNames) {
+            let name = ship;
             let hull = (Math.floor(Math.random() * (6-3+1) + 3));
             let firepower = (Math.floor(Math.random() * (4-2+1) + 2));
             let accuracy = Math.random() * (0.8-0.6) + 0.6;
-            ship = new Ship(ship, hull, firepower, accuracy);
+            let alienShip = new Ship(ship, hull, firepower, accuracy);
+            this.alienShips.push(alienShip);
+            console.log(this.alienShips);
         }
     },
     
@@ -74,13 +85,14 @@ const game = {
     play: function() {
         this.generateEnemies();
         while (this.playing === true) {
-            this.attack(this.ussAssembly, this.alienShip);
+            this.attack(this.ussAssembly, this.alienShips[0]);
         }
     }
 }
 
-game.generateEnemies();
-//console.log(game.play());
+//game.generateEnemies();
+//console.log(game.alienShips[0]);
+console.log(game.play());
 
 
 //console.log(game.attack(game.alienShip, game.ussAssembly));

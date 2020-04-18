@@ -12,21 +12,46 @@ class Ship {
 const game = {
     title: "Space Battle",
     ussAssembly: new Ship('USS Assembly', 20, 5, 0.7),
-    alienShip: new Ship('Millenium Falcon', 4, 3, 0.7),
+    alienShip: new Ship('Enemy Ship', 4, 3, 0.7),
     
     //attack method
     attack: function(attacker, attacked) {
+        console.log(`${attacker.name} is attacking ${attacked.name}!`);
+        //check if attack higher than attacked ship's directory
         if (Math.random() < attacked.accuracy) {
+            //tell us the attacked ship has been hit
             console.log(`${attacked.name} has been hit!`);
+            //remove hull points of attacked ship 
+            attacked.hull = attacked.hull - attacker.firepower;
+            //if hull reaches 0, keep it at 0 (no negative hull points)
+            if (attacked.hull < 0) {attacked.hull = 0};
+            //tell us remaining hull score of attacked ship
+            console.log(`${attacked.name}'s hull is now ${attacked.hull}.`);
+            //if the attacked ships' hull reached 0
+            if (attacked.hull === 0) 
+                {console.log(`${attacked.name} has been DESTROYED!`);}
+            //else, attacked becomes the attacker
         }
         else {
+            //tell us the attacking ship missed
             console.log(`${attacker.name} has missed!`);
         }
     },
     
-};
+    //play function
+    play: function() {
+        this.attack(this.ussAssembly, this.alienShip);
+        //if alien ship survives
+        //if (this.alienShip.hull > 0) {
+            //this.attack(this.alienShip, this.ussAssembly);
+        }
+    };
 
-console.log(game.attack(game.ussAssembly, game.alienShip));
+
+console.log(game.play());
+
+
+//console.log(game.attack(game.ussAssembly, game.alienShip));
 
 
 

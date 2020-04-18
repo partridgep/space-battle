@@ -13,7 +13,8 @@ const game = {
     title: "Space Battle",
     playing: true,
     ussAssembly: new Ship('USS Assembly', 20, 5, 0.7),
-    alienShip: new Ship('Enemy Ship', 4, 3, 0.7),
+    //alienShip: new Ship('Enemy Ship', 4, 3, 0.7),
+    alienShips: ['Enemy', 'Mean'],
     
     //attack method
     attack: function(attacker, attacked) {
@@ -55,19 +56,31 @@ const game = {
         else {
             //tell us the attacking ship missed
             console.log(`${attacker.name} has missed!`);
+            this.attack(attacked, attacker);
+        }
+    },
+
+    //generate enemy ships function
+    generateEnemies() {
+        for(ship of this.alienShips) {
+            let hull = (Math.floor(Math.random() * (6-3+1) + 3));
+            let firepower = (Math.floor(Math.random() * (4-2+1) + 2));
+            let accuracy = Math.random() * (0.8-0.6) + 0.6;
+            ship = new Ship(ship, hull, firepower, accuracy);
         }
     },
     
     //play function
     play: function() {
+        this.generateEnemies();
         while (this.playing === true) {
             this.attack(this.ussAssembly, this.alienShip);
         }
     }
 }
 
-
-console.log(game.play());
+game.generateEnemies();
+//console.log(game.play());
 
 
 //console.log(game.attack(game.alienShip, game.ussAssembly));

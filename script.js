@@ -14,7 +14,7 @@ const game = {
     playing: true,
     ussAssembly: new Ship('USS Assembly', 20, 5, 0.7),
     //alienShip: new Ship('Enemy Ship', 4, 3, 0.7),
-    alienShipNames: ['Enemy', 'Mean'],
+    alienShipNames: ['Enemy', 'Mean', 'Renegade', 'Curiosity', 'Optimus Prime', 'Sputnik'],
     alienShips: [],
     
     //attack method
@@ -35,26 +35,27 @@ const game = {
                 {console.log(`${attacked.name} has been DESTROYED!`);
                 //remove first alien ship out of array
                 this.alienShips.shift();
-                console.log(this.alienShips[0]);
+                if (this.alienShips.length > 0) {
+                    let answer = prompt('Would you like to attack the next ship or retreat?');
+                    //if answer is retreat, game is over
+                    if (answer.toLowerCase() === 'retreat')
+                        {console.log('Game Over.');
+                        //exit out of game
+                        this.playing = false;}
+                    else if (answer.toLowerCase() === 'attack') {
+                        this.attack(attacker, this.alienShips[0]);
+                    }
+                    }
+                    else {
+                        console.log('You saved Earth!');
+                        this.playing = false;
+                    }
                 //if you are destroyed
                 if (attacked.name === 'USS Assembly') {
                     console.log('You LOSE!');
                     //exit out of game
                     this.playing = false;
                 }
-                else //if you destroy the ship, you have the option to attack next ship or retreat
-                    {
-                        let answer = prompt('Would you like to attack the next ship or retreat?');
-                        //if answer is retreat, game is over
-                        if (answer.toLowerCase() === 'retreat')
-                            {console.log('Game Over.');
-                            //exit out of game
-                            this.playing = false;}
-                        else if (answer.toLowerCase() === 'attack') {
-                            console.log('attacked is now '+this.alienShips[0]);
-                            this.attack(attacker, this.alienShips[0]);
-                        }    
-                    }
                 }
             //else, attacked becomes the attacker
             else {
@@ -77,7 +78,6 @@ const game = {
             let accuracy = Math.random() * (0.8-0.6) + 0.6;
             let alienShip = new Ship(ship, hull, firepower, accuracy);
             this.alienShips.push(alienShip);
-            console.log(this.alienShips);
         }
     },
     
@@ -85,7 +85,7 @@ const game = {
     play: function() {
         this.generateEnemies();
         while (this.playing === true) {
-            this.attack(this.ussAssembly, this.alienShips[0]);
+                this.attack(this.ussAssembly, this.alienShips[0]);
         }
     }
 }

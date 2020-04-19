@@ -13,7 +13,6 @@ const game = {
     title: "Space Battle",
     playing: true,
     ussAssembly: new Ship('USS Assembly', 20, 5, 0.7),
-    //alienShip: new Ship('Enemy Ship', 4, 3, 0.7),
     alienShipNames: ['Enemy', 'Mean', 'Renegade', 'Curiosity', 'Optimus Prime', 'Sputnik'],
     alienShips: [],
     
@@ -94,16 +93,44 @@ const game = {
             this.alienShips.push(alienShip);
         }
     },
-    
+
+    //reset function
+    reset: function() {
+        game.playing = true;
+        game.ussAssembly.hull = 20;
+        game.alienShips = [];
+    },
+
+
     //play function
     play: function() {
-        //get our array of enemies
-        this.generateEnemies();
-        //check the conditional loop
-        while (this.playing === true) {
+        //welcome player
+        alert('Welcome to Space Battle');
+        //let player decide to play
+        if (confirm("You are the captain of USS Assembly. \nDo you wish to engage in a deadly space battle?")) {
+            alert('Game on!');
+            //get our array of enemies
+            this.generateEnemies();
+            //check the conditional loop
+            while (this.playing === true) {
                 //start the game by attacking first alien ship
                 this.attack(this.ussAssembly, this.alienShips[0]);
+            }
+            //let player play again if they want to
+            if (confirm('Would you like to play again?')) {
+                alert('Here we go again!');
+                game.reset();
+                game.play();
+            }
+            else {
+                alert('Alright. Take a break, space hero!');
+                this.playing = false;
+            }
         }
+        else {
+            alert('You chose not to save Earth.');
+            this.playing = false;
+        };     
     }
 }
 

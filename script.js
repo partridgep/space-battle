@@ -39,8 +39,8 @@ const game = {
                     this.playing = false;
                 }
                 else {
-                //remove first alien ship out of array
-                this.alienShips.shift();
+                //remove destroyed alien ship out of array
+                this.removeDestroyed(attacked);
                 //check if there are any remaining enemy ships
                 if (this.alienShips.length > 0) {
                     //prompt user if they want to attack next ship or retreat
@@ -52,9 +52,9 @@ const game = {
                         this.playing = false;}
                     else if (answer.toLowerCase() === 'attack') {
                         //attack next alien ship
-                        this.attack(attacker, this.alienShips[0]);
+                        this.pickShip();
                     }
-                    }
+                }
                     else {
                         //exit out of game after hard earned victory
                         console.log('You saved Earth!');
@@ -101,6 +101,34 @@ const game = {
         game.alienShips = [];
     },
 
+    //show alien ships function
+    displayAliens: function() {
+        let description = '';
+        for(i=0; i<this.alienShips.length; i++) {
+            let alien = this.alienShips[i];
+            description = description +`[${i+1}] ${alien.name}\nHull: ${alien.hull}, Firepower: ${alien.firepower}, Accuracy: ${alien.accuracy}\n`
+        }
+        return prompt('Which alien ship would you like to attack? \n'+description);
+    },
+
+    //pick which ship to attack
+    pickShip: function() {
+        //ask user which alien ship to attack
+        let AlienToAttack = parseInt(this.displayAliens())-1;
+        //attack chosen ship
+        this.attack(this.ussAssembly, this.alienShips[AlienToAttack]);
+    },
+
+    //remove destroyed ship from array
+    removeDestroyed: function(enemy) {
+        for(i=0; i < this.alienShips.length; i++) {
+            if (enemy === this.alienShips[i]) {
+                for(ship of this.alienShips) {
+                }
+                this.alienShips.splice(i, 1);
+            };
+        };
+    },
 
     //play function
     play: function() {
@@ -113,8 +141,11 @@ const game = {
             this.generateEnemies();
             //check the conditional loop
             while (this.playing === true) {
+                //ask user which alien ship to attack
+                //let AlienToAttack = parseInt(this.displayAliens())-1;
                 //start the game by attacking first alien ship
-                this.attack(this.ussAssembly, this.alienShips[0]);
+                //this.attack(this.ussAssembly, this.alienShips[AlienToAttack]);
+                this.pickShip();
             }
             //let player play again if they want to
             if (confirm('Would you like to play again?')) {
